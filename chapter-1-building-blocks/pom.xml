@@ -1,0 +1,21 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.melgers.ocp17</groupId>
+  <artifactId>chapter1</artifactId>
+  <version>1</version>
+
+<build>
+  <plugins>
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.8.0</version>
+    <configuration>
+        <release>7</release>
+    </configuration>
+</plugin>
+</plugins>
+</build>
+
+</project>
