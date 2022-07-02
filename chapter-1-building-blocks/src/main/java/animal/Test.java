@@ -17,5 +17,10 @@ public class Test {
         tf.jump();
         tf.ribbit();
 
+        new Test();
+
     }
+
+    { System.out.println("--- test ---");}
+
 }

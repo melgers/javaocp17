@@ -1,14 +1,15 @@
-import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -16,7 +17,18 @@ import java.util.stream.Stream;
 
 public class HelloWorld {
 
+
+    // var var = 3; // var only allowed as local
+    //Var case = new Var(); // case is keyword
+    void var() {};
+    //int Var() { var _ = 7 ; return _;}  // _ is keyword
+    //String new = "var";
+    //var var() { return null; }
+
     public static void test1() {
+
+        logm();
+
         final int score1 = 8, score2 = 3;
 
         char myScore = 7;
@@ -33,6 +45,9 @@ public class HelloWorld {
     };
 
     public static void test2() {
+
+        logm();
+
         int moon = 9 , star = 2 + 2 * 3;
         float sun = star > 10 ? 1 : 3;
         double jupiter = (sun + moon) - 1.0f;
@@ -41,6 +56,9 @@ public class HelloWorld {
     }
 
     public static void test3() {
+
+        logm();
+
         List<Integer> data = new ArrayList<>();
 
         IntStream.range(0 , 100).forEach( s -> data.add(s));
@@ -50,6 +68,8 @@ public class HelloWorld {
 
  
     public static void test4() {
+
+        logm();
 
         Predicate<String> empty = String::isEmpty;
 
@@ -62,6 +82,8 @@ public class HelloWorld {
 
     public static void test5() {
     
+        logm();
+
         var a = 15;
         var b = 10;
 
@@ -72,10 +94,10 @@ public class HelloWorld {
     }
 
     public static void test6() {
-
+        logm();
         Locale fr = new Locale("fr");
 
-        Locale.setDefault(new Locale("en" , "US"));
+        Locale.setDefault(new Locale("en" , "US")); // in geval niet gevonden neem engels (dus niet base bundle zonder b.v. _nl )
 
         var b = ResourceBundle.getBundle("Penguin", fr);
 
@@ -88,23 +110,96 @@ public class HelloWorld {
         x = x + amountToAdd;
     }
 
-    public static void test7() {
-        int[] array = { 6,9,8 };
-
-        System.out.println("B"+ Arrays.binarySearch(array, 9));
-        System.out.println("C"+ Arrays.compare(array, new int[] { 6 , 9, 8}));
-        System.out.println("M"+ Arrays.mismatch(array, new int[] { 6 , 9 , 8}));
+    private static void logm() {
+        
+        StackWalker walker = StackWalker.getInstance();
+        Optional<String> methodName = walker.walk(frames -> frames.filter( m -> !m.getMethodName().equals("logm") ).findFirst().map(StackWalker.StackFrame::getMethodName));
+        System.out.println(String.format("-- %s --" , methodName.get()));
     }
 
+    public static void test7() {
 
-    public static void main(String[] args) {
+        logm();
 
-        Set<? extends RuntimeException> mySet1 = new HashSet<? extends RuntimeException>();
-        Set<? extends RuntimeException> mySet2 = new TreeSet<RuntimeException>();
+        int[] array = { 6,9,8 };
+
+        System.out.println("B"+ Arrays.binarySearch(array, 9)); // B1
+        System.out.println("C"+ Arrays.compare(array, new int[] { 6 , 9, 8})); // C0
+        System.out.println("M"+ Arrays.mismatch(array, new int[] { 6 , 9 , 8})); // M-1
+
+        // eigen tests
+        System.out.println("H"+ Arrays.mismatch(array, new int[] { 6 , 9 , 6})); // H2
+    }
+
+    public static void test19() {
+        logm();
+
+        var x = 5;
+        var j = 0;
+        
+        OUTER: for ( var i=0 ; i< 3 ;)
+            INNER: do {
+                i++;
+                x++;
+                if ( x > 10) break INNER;
+                x += 4;
+                j++;
+            } while ( j <= 2);
+            System.out.println(x);
+    }
+
+    public static void test20() {
+        logm();
+
+        var pooh = """
+            "Oh, bother." -Pooh    
+            """.indent(1);
+
+            System.out.println(pooh);
+    }
+
+    public static void test22() {
+        var treeMap = new TreeMap<Character, Integer>();
+
+        treeMap.put('k', 1);
+        treeMap.put('k', 2);
+        treeMap.put('m', 3);
+        treeMap.put('M', 4);
+        
+        treeMap.replaceAll((k,v) -> v + v);
+
+        treeMap.keySet().forEach(k -> System.out.print(treeMap.get(k)));
+    }
+    public static void test13() {
+
+        logm();
+
+        //Set<? extends RuntimeException> mySet1 = new HashSet<? extends RunitmeException>();
+        //Set<? extends RuntimeException> mySet2 = new HashSet<Exception>();
         Set<? extends RuntimeException> mySet3 = new TreeSet<RuntimeException>();
-        Set<? extends RuntimeException> mySet4 = new TreeSet<RuntimeException>();
+        Set<? extends RuntimeException> mySet4 = new TreeSet<NullPointerException>();
+    }
 
-        test7(); 
+    public static void test23() {
+
+
+        
+
+        //System.out.println(test( (int i) ->  i == 5));
+
+    }
+
+    private static boolean test(Function<Integer,Boolean> b) {
+        return b.apply(5);
+    }
+  
+
+    public static void main(String[] args) { 
+
+        //test6();
+        //test7();
+        
+        test22();
     }
 
 }
